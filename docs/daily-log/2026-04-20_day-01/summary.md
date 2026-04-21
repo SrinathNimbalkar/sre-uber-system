@@ -1,16 +1,18 @@
-# 📆 Day 01 - 20 April 2026
+# 📅 Day 01 — 2026-04-20
 
-## ✅ What I Did
-- Set up GitHub repository
-- Configured SSH (personal + work separation)
-- Designed project structure
+## 🚀 What I Did
+- Set up GitHub repository for SRE Uber system
+- Configured SSH authentication (personal vs work separation)
+- Established structured project layout
+- Prepared development environment (Mac + Ubuntu VM)
 
-## 🧠 What I Learned
-- Difference between SSH alias vs domain
-- Importance of clean repo structure
+## 🧠 Key Concepts
+- Git = system memory (version control)
+- SSH = secure identity layer
+- Repository = foundation for system evolution
 
-## ⚠️ Issues Faced
-- SSH clone failed due to wrong hostname
+## 🔥 System View
+Developer → Git → Remote Repo → Version Control → Collaboration
 
-## 🔥 Key Insight
-System design starts with structure, not code
+## 💡 Insight
+Before building distributed systems, identity, access, and structure must be correct.
