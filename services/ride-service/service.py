@@ -1,6 +1,7 @@
 # service.py
 
 from repository import create_ride, get_ride, update_status
+from event import emit_event
 
 ALLOWED_TRANSITIONS = {
     "requested": ["assigned", "cancelled"],
@@ -46,6 +47,12 @@ def update_ride_status(ride_id, new_status):
         }, 400
 
     update_status(ride_id, new_status)
+
+    emit_event(
+    event_type="ride_status_changed",
+    ride_id=ride_id,
+    old_status=current_status,
+    new_status=new_status)
 
     return {
         "ride_id": ride_id,
