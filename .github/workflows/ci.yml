@@ -55,19 +55,11 @@ jobs:
           test -d docs/daily-log
 
       # ---------------- BLOCK PYTHON CACHE ----------------
-      - name: Fail If __pycache__ Exists
+      - name: Fail If Git Tracks Python Cache Files
         run: |
-          if find . | grep -q "__pycache__"; then
-            echo "ERROR: __pycache__ detected"
-            exit 1
-          fi
-
-      # ---------------- BLOCK .pyc FILES ----------------
-      - name: Fail If .pyc Files Exist
-        run: |
-          if find . -name "*.pyc" | grep -q .; then
-            echo "ERROR: .pyc files detected"
-            exit 1
+          if git ls-files | grep -E "__pycache__|\.pyc$"; then
+           echo "ERROR: Git is tracking Python cache artifacts"
+           exit 1
           fi
 
       # ---------------- SUCCESS ----------------
