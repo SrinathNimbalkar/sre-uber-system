@@ -1,0 +1,75 @@
+name: Repository Integrity Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - feature/**
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  repository-integrity-check:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # ---------------- CHECKOUT REPOSITORY ----------------
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # ---------------- SETUP PYTHON ----------------
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # ---------------- VALIDATE ALL PYTHON FILES ----------------
+      - name: Validate All Python Files
+        run: |
+          find . -name "*.py" -exec python3 -m py_compile {} \;
+
+      # ---------------- VERIFY IMPORTANT DIRECTORIES ----------------
+      - name: Verify Critical Directories
+        run: |
+          test -d services
+          test -d docs
+          test -d architecture
+
+      # ---------------- VERIFY IMPORTANT FILES ----------------
+      - name: Verify Critical Files
+        run: |
+          test -f README.md
+          test -f services/ride-service/app.py
+          test -f services/ride-service/service.py
+          test -f services/ride-service/repository.py
+          test -f services/ride-service/db.py
+
+      # ---------------- VERIFY DAILY LOG STRUCTURE ----------------
+      - name: Verify Daily Logs Exist
+        run: |
+          test -d docs/daily-log
+
+      # ---------------- BLOCK PYTHON CACHE ----------------
+      - name: Fail If __pycache__ Exists
+        run: |
+          if find . | grep -q "__pycache__"; then
+            echo "ERROR: __pycache__ detected"
+            exit 1
+          fi
+
+      # ---------------- BLOCK .pyc FILES ----------------
+      - name: Fail If .pyc Files Exist
+        run: |
+          if find . -name "*.pyc" | grep -q .; then
+            echo "ERROR: .pyc files detected"
+            exit 1
+          fi
+
+      # ---------------- SUCCESS ----------------
+      - name: Integrity Check Passed
+        run: echo "Repository integrity validation passed successfully"
