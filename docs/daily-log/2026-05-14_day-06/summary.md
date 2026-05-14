@@ -1,13 +1,20 @@
-# 📅 Day 06 — Repository Integrity Automation
+# 📅 Day 06 — GitHub Actions Repository Integrity Pipeline
 
 ## 🚀 What Was Built
 
-- Introduced GitHub Actions CI pipeline
-- Added automatic repository validation
-- Added dynamic Python syntax validation
-- Added repository integrity protection
-- Added cleanup enforcement
+- Introduced GitHub Actions CI automation
+- Added repository integrity validation
+- Added dynamic Python validation
+- Added Git tracked artifact validation
 
-## 🧠 Key Insight
+## 🧠 Major Learning
 
-Engineering systems should protect repository integrity automatically instead of relying on human memory.
+CI pipeline itself generated temporary runtime artifacts.
+
+Validation logic was corrected to distinguish:
+- runtime filesystem state
+- Git tracked repository state
+
+## 💡 Key Insight
+
+Good automation must understand system behavior deeply to avoid false positives.
