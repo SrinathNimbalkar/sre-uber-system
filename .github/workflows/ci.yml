@@ -1,11 +1,6 @@
 name: Repository Integrity Pipeline
 
 on:
-  push:
-    branches:
-      - main
-      - feature/**
-
   pull_request:
     branches:
       - main
