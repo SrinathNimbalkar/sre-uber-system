@@ -1,6 +1,6 @@
 # service.py
 
-from repository import create_ride, get_ride, update_status
+from repository import create_ride, get_ride, update_status, create_event
 from event import emit_event
 
 ALLOWED_TRANSITIONS = {
@@ -18,7 +18,11 @@ def create_ride_service(data):
         data["pickup"],
         data["drop"]
     )
-    return {"ride_id": ride_id, "status": "requested"}
+
+    return {
+        "ride_id": ride_id,
+        "status": "requested"
+    }
 
 
 def get_ride_service(ride_id):
@@ -34,6 +38,7 @@ def get_ride_service(ride_id):
 
 
 def update_ride_status(ride_id, new_status):
+
     ride = get_ride(ride_id)
 
     if not ride:
@@ -46,13 +51,20 @@ def update_ride_status(ride_id, new_status):
             "error": f"Invalid transition from {current_status} to {new_status}"
         }, 400
 
+    # Update ride status
     update_status(ride_id, new_status)
 
+    # Create async payment event
+    if new_status == "completed":
+        create_event(ride_id, "payment_requested")
+
+    # Emit internal event
     emit_event(
-    event_type="ride_status_changed",
-    ride_id=ride_id,
-    old_status=current_status,
-    new_status=new_status)
+        event_type="ride_status_changed",
+        ride_id=ride_id,
+        old_status=current_status,
+        new_status=new_status
+    )
 
     return {
         "ride_id": ride_id,

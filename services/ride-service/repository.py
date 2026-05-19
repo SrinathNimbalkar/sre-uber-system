@@ -1,6 +1,10 @@
+# repository.py
+
 from db import get_connection
 
+
 def create_ride(user_id, pickup, drop):
+
     conn = get_connection()
     cur = conn.cursor()
 
@@ -11,6 +15,7 @@ def create_ride(user_id, pickup, drop):
     """, (user_id, pickup, drop, "requested"))
 
     ride_id = cur.fetchone()[0]
+
     conn.commit()
 
     cur.close()
@@ -20,10 +25,16 @@ def create_ride(user_id, pickup, drop):
 
 
 def get_ride(ride_id):
+
     conn = get_connection()
     cur = conn.cursor()
 
-    cur.execute("SELECT ride_id, status FROM rides WHERE ride_id = %s", (ride_id,))
+    cur.execute("""
+        SELECT ride_id, status
+        FROM rides
+        WHERE ride_id = %s
+    """, (ride_id,))
+
     result = cur.fetchone()
 
     cur.close()
@@ -33,13 +44,31 @@ def get_ride(ride_id):
 
 
 def update_status(ride_id, status):
+
     conn = get_connection()
     cur = conn.cursor()
 
-    cur.execute(
-        "UPDATE rides SET status = %s WHERE ride_id = %s",
-        (status, ride_id)
-    )
+    cur.execute("""
+        UPDATE rides
+        SET status = %s
+        WHERE ride_id = %s
+    """, (status, ride_id))
+
+    conn.commit()
+
+    cur.close()
+    conn.close()
+
+
+def create_event(ride_id, event_type):
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        INSERT INTO events (ride_id, event_type, status)
+        VALUES (%s, %s, %s)
+    """, (ride_id, event_type, "pending"))
 
     conn.commit()
 
